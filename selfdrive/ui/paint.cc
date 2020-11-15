@@ -457,11 +457,11 @@ static void ui_draw_debug(UIState *s)
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     nvgFillColor(s->vg, COLOR_YELLOW_ALPHA(200)); 
     if (s->lateral_control == 0) {
-      ui_print(s, ui_viz_rx, ui_viz_ry+520, "LaC:PID");
+      ui_print(s, ui_viz_rx, ui_viz_ry+270, "PID");
     } else if (s->lateral_control == 1) {
-      ui_print(s, ui_viz_rx, ui_viz_ry+520, "LaC:INDI");
+      ui_print(s, ui_viz_rx, ui_viz_ry+270, "INDI");
     } else if (s->lateral_control == 2) {
-      ui_print(s, ui_viz_rx, ui_viz_ry+520, "LaC:LQR");
+      ui_print(s, ui_viz_rx, ui_viz_ry+270, "LQR");
     }
 
     nvgFontSize(s->vg, 43);
