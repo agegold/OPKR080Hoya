@@ -276,7 +276,7 @@ static void ui_draw_vision_lane_lines(UIState *s) {
     }
     red_lvl = 0;
     green_lvl = 0;
-    if ( scene->model.right_lane.prob > 0.4 ){
+    if ( scene->lane_line_probs[ll_idx] > 0.4 ){
       red_lvl = int(1 - (scene->lane_line_probs[ll_idx] - 0.4) * 2.5);
       green_lvl = 1 ;
     }
