@@ -455,13 +455,13 @@ static void ui_draw_debug(UIState *s)
 
     nvgFontSize(s->vg, 45);
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-    nvgFillColor(s->vg, COLOR_YELLOW_ALPHA(200)); 
+    nvgFillColor(s->vg, COLOR_WHITE_ALPHA(200)); 
     if (s->lateral_control == 0) {
-      ui_print(s, ui_viz_rx, ui_viz_ry+270, "PID");
+      ui_print(s, ui_viz_rx_center, ui_viz_ry+270, "PID");
     } else if (s->lateral_control == 1) {
-      ui_print(s, ui_viz_rx, ui_viz_ry+270, "INDI");
+      ui_print(s, ui_viz_rx_center, ui_viz_ry+270, "INDI");
     } else if (s->lateral_control == 2) {
-      ui_print(s, ui_viz_rx, ui_viz_ry+270, "LQR");
+      ui_print(s, ui_viz_rx_center, ui_viz_ry+270, "LQR");
     }
 
     nvgFontSize(s->vg, 43);
@@ -475,7 +475,7 @@ static void ui_draw_debug(UIState *s)
 
     nvgFontSize(s->vg, 45);
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-    nvgFillColor(s->vg, COLOR_YELLOW_ALPHA(200)); 
+    nvgFillColor(s->vg, COLOR_WHITE_ALPHA(200)); 
     // ui_print(s, ui_viz_rx_center, ui_viz_ry+650, "커브");
     // if (scene.curvature >= 0.001) {
     //   ui_print(s, ui_viz_rx_center, ui_viz_ry+700, "↖%.4f　", abs(scene.curvature));
