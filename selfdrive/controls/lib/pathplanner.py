@@ -141,7 +141,7 @@ class PathPlanner():
 
     if abs(output_scale) >= 0.9 and v_ego > 8:
       self.new_steerRatio = interp(abs(anglesteer_current), self.angle_differ_range, self.steerRatio_range)
-      self.new_steer_rate_cost = interp(abs(anglesteer_current), self.angle_differ_range, self.steer_rate_cost_range)
+      # self.new_steer_rate_cost = interp(abs(anglesteer_current), self.angle_differ_range, self.steer_rate_cost_range)
     #if abs(output_scale) >= 1 and v_ego > 8 and ((abs(anglesteer_desire) - abs(anglesteer_current)) > 20):
     #  self.mpc_frame += 1
     #  if self.mpc_frame % 5 == 0:
@@ -155,9 +155,9 @@ class PathPlanner():
         self.new_steerRatio -= 0.2
         if self.new_steerRatio <= CP.steerRatio:
           self.new_steerRatio = CP.steerRatio
-        self.new_steer_rate_cost += 0.02
-        if self.new_steer_rate_cost >= CP.steerRateCost:
-         self.new_steer_rate_cost = CP.steerRateCost
+        # self.new_steer_rate_cost += 0.02
+        # if self.new_steer_rate_cost >= CP.steerRateCost:
+        #  self.new_steer_rate_cost = CP.steerRateCost
         self.mpc_frame = 0
 
     self.new_steer_actuator_delay = interp(v_ego, self.steer_actuator_delay_vel, self.steer_actuator_delay_range)
