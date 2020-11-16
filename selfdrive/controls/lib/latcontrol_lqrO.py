@@ -51,8 +51,8 @@ class LatControlLQR():
   def update(self, active, CS, CP, path_plan):
     lqr_log = log.ControlsState.LateralLQRState.new_message()
     steering_angle = CS.steeringAngle
-    if CS.vEgo > 8:
-      self.new_scale = interp(abs(steering_angle), self.angle_differ_range, self.scale_range)
+    # if CS.v_ego > 8:
+    #   self.new_scale = interp(abs(steering_angle), self.angle_differ_range, self.scale_range)
 
     steers_max = get_steer_max(CP, CS.vEgo)
     torque_scale = (0.45 + CS.vEgo / 60.0)**2  # Scale actuator model with speed
@@ -75,7 +75,7 @@ class LatControlLQR():
 
       # LQR
       u_lqr = float(self.angle_steers_des / self.dc_gain - self.K.dot(self.x_hat))
-      lqr_output = torque_scale * u_lqr / self.new_scale #scale
+      lqr_output = torque_scale * u_lqr / self.scale #new_scale #
 
       # Integrator
       if CS.steeringPressed:
