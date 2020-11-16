@@ -58,6 +58,7 @@ class PathPlanner():
 
     self.last_cloudlog_t = 0
     self.steer_rate_cost = CP.steerRateCost
+    self.new_steer_rate_cost = CP.steerRateCost
 
     self.setup_mpc()
     self.solution_invalid_cnt = 0
@@ -91,7 +92,6 @@ class PathPlanner():
     self.steerRatio_range = [CP.steerRatio, 18]
     self.new_steerRatio = CP.steerRatio
 
-    self.new_steer_rate_cost = CP.steerRateCost
     self.steer_rate_cost_range = [CP.steerRateCost, 0.1]
 
     self.steer_actuator_delay_range = [0.15, CP.steerActuatorDelay]
