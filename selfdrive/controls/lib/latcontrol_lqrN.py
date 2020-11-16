@@ -51,7 +51,7 @@ class LatControlLQR():
   def update(self, active, CS, CP, path_plan):
     lqr_log = log.ControlsState.LateralLQRState.new_message()
     steering_angle = CS.steeringAngle
-    if CS.v_ego > 8:
+    if CS.vEgo > 8:
       self.new_scale = interp(abs(steering_angle), self.angle_differ_range, self.scale_range)
 
     steers_max = get_steer_max(CP, CS.vEgo)
