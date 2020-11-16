@@ -266,16 +266,16 @@ static void update_line_data(UIState *s, const cereal::ModelDataV2::XYZTData::Re
 
 static void ui_draw_vision_lane_lines(UIState *s) {
   const UIScene *scene = &s->scene;
-  int red_lvl = 0;
-  int green_lvl = 0;
+  red_lvl = 0.0;
+  green_lvl = 0.0;
   // paint lanelines
   line_vertices_data *pvd_ll = &s->lane_line_vertices[0];
   for (int ll_idx = 0; ll_idx < 4; ll_idx++) {
     if(s->sm->updated("modelV2")) {
       update_line_data(s, scene->model.getLaneLines()[ll_idx], 0.025*scene->model.getLaneLineProbs()[ll_idx], pvd_ll + ll_idx, scene->max_distance);
     }
-    red_lvl = 0;
-    green_lvl = 0;
+    red_lvl = 0.0;
+    green_lvl = 0.0;
     if ( scene->lane_line_probs[ll_idx] > 0.4 ){
       red_lvl = 1 - (scene->lane_line_probs[ll_idx] - 0.4) * 2.5;
       green_lvl = 1 ;
