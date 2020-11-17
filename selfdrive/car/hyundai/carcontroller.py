@@ -185,7 +185,7 @@ class CarController():
     self.angle_steers = CS.out.steeringAngle
     self.angle_diff = abs(self.angle_steers_des) - abs(self.angle_steers)
 
-    if abs(self.outScale) >= 0.9 and CS.out.vEgo > 8:
+    if abs(self.outScale) >= 0.8 and CS.out.vEgo > 8:
       self.steerMax = interp(abs(self.angle_steers), self.angle_differ_range, self.steerMax_range)
       self.steerDeltaUp = interp(abs(self.angle_steers), self.angle_differ_range, self.steerDeltaUp_range)
       self.steerDeltaDown = interp(abs(self.angle_steers), self.angle_differ_range, self.steerDeltaDown_range)

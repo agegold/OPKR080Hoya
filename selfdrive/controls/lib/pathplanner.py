@@ -89,12 +89,13 @@ class PathPlanner():
     self.lane_change_adjust_new = 0.0
 
     self.angle_differ_range = [0, 40]
-    self.steerRatio_range = [CP.steerRatio, 18]
+    self.steerRatio_range = [CP.steerRatio, 17]
     self.new_steerRatio = CP.steerRatio
 
     self.steer_rate_cost_range = [CP.steerRateCost, 0.1]
 
     self.steer_actuator_delay_range = [0.15, CP.steerActuatorDelay]
+    self.steer_actuator_delay_range_angle = [0.30, 0.15]
     self.steer_actuator_delay_vel = [8, 22]
     self.new_steer_actuator_delay = CP.steerActuatorDelay
 
@@ -139,7 +140,7 @@ class PathPlanner():
 
     self.angle_diff = abs(anglesteer_desire) - abs(anglesteer_current)
 
-    if abs(output_scale) >= 0.9 and v_ego > 8:
+    if abs(output_scale) >= 0.8 and v_ego > 8:
       self.new_steerRatio = interp(abs(anglesteer_current), self.angle_differ_range, self.steerRatio_range)
       # self.new_steer_rate_cost = interp(abs(anglesteer_current), self.angle_differ_range, self.steer_rate_cost_range)
     #if abs(output_scale) >= 1 and v_ego > 8 and ((abs(anglesteer_desire) - abs(anglesteer_current)) > 20):
@@ -160,7 +161,9 @@ class PathPlanner():
         #  self.new_steer_rate_cost = CP.steerRateCost
         self.mpc_frame = 0
 
-    self.new_steer_actuator_delay = interp(v_ego, self.steer_actuator_delay_vel, self.steer_actuator_delay_range)
+    #self.new_steer_actuator_delay = interp(v_ego, self.steer_actuator_delay_vel, self.steer_actuator_delay_range)
+    self.new_steer_actuator_delay = interp(abs(anglesteer_current), self.angle_differ_range, self.steer_actuator_delay_range_angle)
+
 
     # Update vehicle model
     x = max(sm['liveParameters'].stiffnessFactor, 0.1)
