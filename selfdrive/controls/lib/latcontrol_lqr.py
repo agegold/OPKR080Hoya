@@ -72,6 +72,8 @@ class LatControlLQR():
       lqr_log.active = False
       lqr_output = 0.
       self.reset()
+    elif CS.vEgo < 7: #7*3.6km
+      self.angle_steers_des = path_plan.angleSteers * 0.5
     else:
       lqr_log.active = True
 

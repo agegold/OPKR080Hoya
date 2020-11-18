@@ -25,6 +25,8 @@ class LatControlPID():
       output_steer = 0.0
       pid_log.active = False
       self.pid.reset()
+    elif CS.vEgo < 7: #7*3.6km
+      self.angle_steers_des = path_plan.angleSteers * 0.5
     else:
       self.angle_steers_des = path_plan.angleSteers  # get from MPC/PathPlanner
 
