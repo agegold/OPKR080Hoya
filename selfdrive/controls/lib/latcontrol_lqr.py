@@ -67,21 +67,17 @@ class LatControlLQR():
     angle_steers_k = float(self.C.dot(self.x_hat))
     e = steering_angle - angle_steers_k
     self.x_hat = self.A.dot(self.x_hat) + self.B.dot(CS.steeringTorqueEps / torque_scale) + self.L.dot(e)
-    u_lqr = float(self.angle_steers_des / self.dc_gain - self.K.dot(self.x_hat))
-    lqr_output = torque_scale * u_lqr / self.new_scale #scale
 
     if CS.vEgo < 0.3 or not active:
       lqr_log.active = False
       lqr_output = 0.
       self.reset()
-    elif CS.vEgo < 7: #7*3.6km
-      self.angle_steers_des = path_plan.angleSteers * 0.5
     else:
       lqr_log.active = True
 
       # LQR
-      # u_lqr = float(self.angle_steers_des / self.dc_gain - self.K.dot(self.x_hat))
-      # lqr_output = torque_scale * u_lqr / self.new_scale #scale
+      u_lqr = float(self.angle_steers_des / self.dc_gain - self.K.dot(self.x_hat))
+      lqr_output = torque_scale * u_lqr / self.new_scale #scale
 
       # Integrator
       if CS.steeringPressed:
