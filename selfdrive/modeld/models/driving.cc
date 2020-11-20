@@ -403,6 +403,7 @@ void model_publish(PubMaster &pm, uint32_t vipc_frame_id, uint32_t frame_id,
       plan_mhp_max_idx = i;
     }
   }
+
   // x pos at 10s is a good valid_len
   float valid_len = 0;
   float valid_len_candidate;
