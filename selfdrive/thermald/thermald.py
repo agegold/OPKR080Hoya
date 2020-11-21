@@ -480,7 +480,6 @@ def thermald_thread():
       if started_ts is None:
         started_ts = sec_since_boot()
         started_seen = True
-        os.system('echo performance > /sys/class/devfreq/soc:qcom,cpubw/governor')
     else:
       if startup_conditions["ignition"] and (startup_conditions != startup_conditions_prev):
         cloudlog.event("Startup blocked", startup_conditions=startup_conditions)
@@ -490,7 +489,6 @@ def thermald_thread():
       started_ts = None
       if off_ts is None:
         off_ts = sec_since_boot()
-        os.system('echo powersave > /sys/class/devfreq/soc:qcom,cpubw/governor')
 
       if shutdown_trigger == 1 and sound_trigger == 1 and msg.thermal.batteryStatus == "Discharging" and started_seen and (sec_since_boot() - off_ts) > 1 and getoff_alert:
         subprocess.Popen([mediaplayer + 'mediaplayer', '/data/openpilot/selfdrive/assets/sounds/eondetach.wav'], shell = False, stdin=None, stdout=None, stderr=None, env = env, close_fds=True)
