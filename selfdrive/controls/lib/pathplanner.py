@@ -96,9 +96,9 @@ class PathPlanner():
 
     self.steer_rate_cost_range = [CP.steerRateCost, 0.1]
 
-    self.steer_actuator_delay_range = [0.15, CP.steerActuatorDelay]
-    self.steer_actuator_delay_range_angle = [0.30, 0.15]
-    self.steer_actuator_delay_vel = [8, 22]
+    self.steer_actuator_delay_range_angle = [0.25, 0.15]
+    self.steer_actuator_delay_range = [0.1, CP.steerActuatorDelay]
+    self.steer_actuator_delay_vel = [3, 22]
     self.new_steer_actuator_delay = CP.steerActuatorDelay
 
     self.angle_offset_select = int(Params().get('OpkrAngleOffsetSelect'))
@@ -156,8 +156,8 @@ class PathPlanner():
           if self.new_steerRatio >= live_steer_ratio:
             self.new_steerRatio = live_steer_ratio
         else:
-          if self.new_steerRatio >= 17.5:
-            self.new_steerRatio = 17.5
+          if self.new_steerRatio >= 17.0:
+            self.new_steerRatio = 17.0
         self.mpc_frame = 0
     else:
       self.mpc_frame += 1
@@ -170,8 +170,8 @@ class PathPlanner():
         #  self.new_steer_rate_cost = CP.steerRateCost
         self.mpc_frame = 0
 
-    #self.new_steer_actuator_delay = interp(v_ego, self.steer_actuator_delay_vel, self.steer_actuator_delay_range)
-    self.new_steer_actuator_delay = interp(abs(anglesteer_current), self.angle_differ_range, self.steer_actuator_delay_range_angle)
+    self.new_steer_actuator_delay = interp(v_ego, self.steer_actuator_delay_vel, self.steer_actuator_delay_range)
+    #self.new_steer_actuator_delay = interp(abs(anglesteer_current), self.angle_differ_range, self.steer_actuator_delay_range_angle)
 
 
     # Update vehicle model

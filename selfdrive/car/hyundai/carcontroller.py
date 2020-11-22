@@ -191,6 +191,9 @@ class CarController():
     #  self.steerMax = interp(self.angle_diff, self.angle_differ_range, self.steerMax_range)
     #  self.steerDeltaUp = interp(self.angle_diff, self.angle_differ_range, self.steerDeltaUp_range)
     #  self.steerDeltaDown = interp(self.angle_diff, self.angle_differ_range, self.steerDeltaDown_range)
+    #  self.steerMax = interp(abs(self.angle_steers), self.angle_differ_range, self.steerMax_range)
+    #  self.steerDeltaUp = interp(abs(self.angle_steers), self.angle_differ_range, self.steerDeltaUp_range)
+    #  self.steerDeltaDown = interp(abs(self.angle_steers), self.angle_differ_range, self.steerDeltaDown_range)
 
     if abs(self.outScale) >= 0.9 and CS.out.vEgo > 8:
       self.steerMax_timer += 1
