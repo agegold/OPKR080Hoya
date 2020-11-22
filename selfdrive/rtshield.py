@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import time
 from common.realtime import set_core_affinity, set_realtime_priority
 
