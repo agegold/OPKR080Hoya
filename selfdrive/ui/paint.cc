@@ -62,7 +62,7 @@ bool car_space_to_full_frame(const UIState *s, float in_x, float in_y, float in_
   *out_x = KEp.v[0] / KEp.v[2];
   *out_y = KEp.v[1] / KEp.v[2];
 
-  return *out_x >= 0 && *out_x <= s->fb_w && *out_y >= 0 && *out_y <= s->fb_h;
+  return *out_x >= 0 && *out_y >= 0;
 }
 
 
@@ -157,9 +157,9 @@ static void ui_draw_line(UIState *s, const vertex_data *v, const int cnt, NVGcol
   if (cnt == 0) return;
 
   nvgBeginPath(s->vg);
-  nvgMoveTo(s->vg, v[0].x, v[0].y);
+  nvgMoveTo(s->vg, std::clamp<float>(v[0].x, 0, s->fb_w), std::clamp<float>(v[0].y, 0, s->fb_h));
   for (int i = 1; i < cnt; i++) {
-    nvgLineTo(s->vg, v[i].x, v[i].y);
+    nvgLineTo(s->vg, std::clamp<float>(v[i].x, 0, s->fb_w), std::clamp<float>(v[i].y, 0, s->fb_h));
   }
   nvgClosePath(s->vg);
   if (color) {
@@ -173,7 +173,7 @@ static void ui_draw_line(UIState *s, const vertex_data *v, const int cnt, NVGcol
 static void update_track_data(UIState *s, const cereal::ModelDataV2::XYZTData::Reader &line, track_vertices_data *pvd) {
   const UIScene *scene = &s->scene;
   const float off = 0.5;
-  int max_idx = 0;
+  int max_idx;
   float lead_d;
   if(s->sm->updated("radarState")) {
     lead_d = scene->lead_data[0].getDRel()*2.;
@@ -201,14 +201,14 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd) {
     // Draw colored MPC track Kegman's
     if (s->scene.steerOverride) {
       track_bg = nvgLinearGradient(s->vg, s->fb_w, s->fb_h, s->fb_w, s->fb_h*.4,
-        COLOR_BLACK_ALPHA(200), COLOR_BLACK_ALPHA(20)); //nvgRGBA(0, 191, 255, 255), nvgRGBA(0, 95, 128, 50));
+        nvgRGBA(0, 191, 255, 255), nvgRGBA(0, 95, 128, 50));
     } else {
-      int torque_scale = (int)fabs(255*(float)s->scene.output_scale);
+      int torque_scale = (int)fabs(510*(float)s->scene.output_scale);
       int red_lvl = fmin(255, torque_scale);
-      int green_lvl = fmin(255, 255-torque_scale);
+      int green_lvl = fmin(255, 510-torque_scale);
       track_bg = nvgLinearGradient(s->vg, s->fb_w, s->fb_h, s->fb_w, s->fb_h*.4,
         nvgRGBA(          red_lvl,            green_lvl,  0, 255),
-        nvgRGBA((int)(0.7*red_lvl), (int)(0.7*green_lvl), 0, 50));
+        nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50));
     }
   } else {
     // Draw white vision track
@@ -266,25 +266,13 @@ static void update_line_data(UIState *s, const cereal::ModelDataV2::XYZTData::Re
 
 static void ui_draw_vision_lane_lines(UIState *s) {
   const UIScene *scene = &s->scene;
-  float red_lvl = 0.0;
-  float green_lvl = 0.0;
   // paint lanelines
   line_vertices_data *pvd_ll = &s->lane_line_vertices[0];
   for (int ll_idx = 0; ll_idx < 4; ll_idx++) {
     if(s->sm->updated("modelV2")) {
       update_line_data(s, scene->model.getLaneLines()[ll_idx], 0.025*scene->model.getLaneLineProbs()[ll_idx], pvd_ll + ll_idx, scene->max_distance);
     }
-    red_lvl = 0.0;
-    green_lvl = 0.0;
-    if ( scene->lane_line_probs[ll_idx] > 0.4 ){
-      red_lvl = 1 - (scene->lane_line_probs[ll_idx] - 0.4) * 2.5;
-      green_lvl = 1 ;
-    }
-    else {
-      red_lvl = 1 ;
-      green_lvl = 1 - (0.4 - scene->lane_line_probs[ll_idx]) * 2.5;
-    }
-    NVGcolor color = nvgRGBAf(red_lvl, green_lvl, 0, 1);
+    NVGcolor color = nvgRGBAf(1.0, 1.0, 1.0, scene->lane_line_probs[ll_idx]);
     ui_draw_line(s, (pvd_ll + ll_idx)->v, (pvd_ll + ll_idx)->cnt, &color, nullptr);
   }
   
@@ -453,45 +441,31 @@ static void ui_draw_debug(UIState *s)
     ui_print(s, ui_viz_rx, ui_viz_ry+150, "·AOAVG:%.2f", scene.liveParams.angleOffsetAverage);
     ui_print(s, ui_viz_rx, ui_viz_ry+200, "·SFact:%.2f", scene.liveParams.stiffnessFactor);
 
-    nvgFontSize(s->vg, 45);
-    nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-    nvgFillColor(s->vg, COLOR_WHITE_ALPHA(200)); 
-    if (s->lateral_control == 0) {
-      ui_print(s, ui_viz_rx_center, ui_viz_ry+270, "PID");
-    } else if (s->lateral_control == 1) {
-      ui_print(s, ui_viz_rx_center, ui_viz_ry+270, "INDI");
-    } else if (s->lateral_control == 2) {
-      ui_print(s, ui_viz_rx_center, ui_viz_ry+270, "LQR");
-    }
-
-    nvgFontSize(s->vg, 43);
-    nvgFillColor(s->vg, COLOR_WHITE_ALPHA(150));
-    nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
     ui_print(s, ui_viz_rx, ui_viz_ry+270, "ADelay:%.2f", scene.pathPlan.steerActuatorDelay);
     ui_print(s, ui_viz_rx, ui_viz_ry+320, "SRCost:%.2f", scene.pathPlan.steerRateCost);
     ui_print(s, ui_viz_rx, ui_viz_ry+370, "OutScale:%.3f", scene.output_scale);
     ui_print(s, ui_viz_rx, ui_viz_ry+420, "Awareness:%.2f", scene.awareness_status);
     ui_print(s, ui_viz_rx, ui_viz_ry+470, "FaceProb:%.2f", scene.face_prob);
-
+    if (s->lateral_control == 0) {
+      ui_print(s, ui_viz_rx, ui_viz_ry+520, "LaC:PID");
+    } else if (s->lateral_control == 1) {
+      ui_print(s, ui_viz_rx, ui_viz_ry+520, "LaC:INDI");
+    } else if (s->lateral_control == 2) {
+      ui_print(s, ui_viz_rx, ui_viz_ry+520, "LaC:LQR");
+    }
     nvgFontSize(s->vg, 45);
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-    nvgFillColor(s->vg, COLOR_WHITE_ALPHA(200)); 
-    // ui_print(s, ui_viz_rx_center, ui_viz_ry+650, "커브");
-    // if (scene.curvature >= 0.001) {
-    //   ui_print(s, ui_viz_rx_center, ui_viz_ry+700, "↖%.4f　", abs(scene.curvature));
-    // } else if (scene.curvature <= -0.001) {
-    //   ui_print(s, ui_viz_rx_center, ui_viz_ry+700, "　%.4f↗", abs(scene.curvature));
-    // } else {
-    //   ui_print(s, ui_viz_rx_center, ui_viz_ry+700, "　%.4f　", abs(scene.curvature));
-    // }
-    ui_print(s, ui_viz_rx_center, ui_viz_ry+750, "←좌측간격(%%)→    차선폭(m)    ←우측간격(%%)→");
-    ui_print(s, ui_viz_rx_center, ui_viz_ry+800, "%4.1f                     %4.2f                    %4.1f", 
-                                                    (scene.pathPlan.lPoly/(scene.pathPlan.lPoly+abs(scene.pathPlan.rPoly)))*100, 
-                                                    scene.pathPlan.laneWidth, 
-                                                    (abs(scene.pathPlan.rPoly)/(scene.pathPlan.lPoly+abs(scene.pathPlan.rPoly)))*100);    }
-    nvgFontSize(s->vg, 40);
-    nvgFillColor(s->vg, COLOR_WHITE_ALPHA(150));
-    nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
+    ui_print(s, ui_viz_rx_center, ui_viz_ry+650, "커브");
+    if (scene.curvature >= 0.001) {
+      ui_print(s, ui_viz_rx_center, ui_viz_ry+700, "↖%.4f　", abs(scene.curvature));
+    } else if (scene.curvature <= -0.001) {
+      ui_print(s, ui_viz_rx_center, ui_viz_ry+700, "　%.4f↗", abs(scene.curvature));
+    } else {
+      ui_print(s, ui_viz_rx_center, ui_viz_ry+700, "　%.4f　", abs(scene.curvature));
+    }
+    ui_print(s, ui_viz_rx_center, ui_viz_ry+750, " 좌측간격(m)    차선폭(m)    우측간격(m)");
+    ui_print(s, ui_viz_rx_center, ui_viz_ry+800, "%.2f                    %.2f                    %.2f", scene.pathPlan.lPoly, scene.pathPlan.laneWidth, abs(scene.pathPlan.rPoly));
+  }
 }
 
 /*
@@ -698,10 +672,10 @@ static void ui_draw_driver_view(UIState *s) {
 
     if (std::abs(face_x) <= 0.35 && std::abs(face_y) <= 0.4) {
       ui_draw_rect(s->vg, fbox_x, fbox_y, 0.6 * box_h / 2, 0.6 * box_h / 2,
-                   nvgRGBAf(1.0, 0.85, 0.72, 0.8 - ((std::abs(face_x) > std::abs(face_y) ? std::abs(face_x) : std::abs(face_y))) * 0.6 / 0.375),
+                   nvgRGBAf(1.0, 1.0, 1.0, 0.8 - ((std::abs(face_x) > std::abs(face_y) ? std::abs(face_x) : std::abs(face_y))) * 0.6 / 0.375),
                    35, 10);
     } else {
-      ui_draw_rect(s->vg, fbox_x, fbox_y, 0.6 * box_h / 2, 0.6 * box_h / 2, nvgRGBAf(1.0, 0.85, 0.72, 0.2), 35, 10);
+      ui_draw_rect(s->vg, fbox_x, fbox_y, 0.6 * box_h / 2, 0.6 * box_h / 2, nvgRGBAf(1.0, 1.0, 1.0, 0.2), 35, 10);
     }
   }
 
