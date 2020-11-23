@@ -9,11 +9,8 @@ from common.realtime import set_core_affinity, set_realtime_priority
 #   openpilot processes
 
 def main():
-  set_core_affinity(int(os.getenv("CORE", "3")))
+  set_core_affinity(3)
   set_realtime_priority(1)
 
   while True:
     time.sleep(0.000001)
-
-if __name__ == "__main__":
-  main()

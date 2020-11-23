@@ -604,7 +604,7 @@ int main(int argc, char** argv) {
   int err;
 
 #ifdef QCOM
-  setpriority(PRIO_PROCESS, 0, -12);
+  set_realtime_priority(50);
 #endif
 
   if (argc > 1 && strcmp(argv[1], "--bootlog") == 0) {

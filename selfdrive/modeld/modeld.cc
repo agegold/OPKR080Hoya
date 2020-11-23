@@ -157,7 +157,6 @@ int main(int argc, char **argv) {
     uint32_t frame_id = 0, last_vipc_frame_id = 0;
     double last = 0;
     int desire = -1;
-    uint32_t run_count = 0;    
     while (!do_exit) {
       VIPCBuf *buf;
       VIPCBufExtra extra;
@@ -180,7 +179,6 @@ int main(int argc, char **argv) {
 
       double mt1 = 0, mt2 = 0;
       if (run_model_this_iter) {
-        run_count++;        
         float vec_desire[DESIRE_LEN] = {0};
         if (desire >= 0 && desire < DESIRE_LEN) {
           vec_desire[desire] = 1.0;
@@ -199,7 +197,6 @@ int main(int argc, char **argv) {
         // tracked dropped frames
         uint32_t vipc_dropped_frames = extra.frame_id - last_vipc_frame_id - 1;
         frames_dropped = (1. - frame_filter_k) * frames_dropped + frame_filter_k * (float)std::min(vipc_dropped_frames, 10U);
-        if (run_count < 10) frames_dropped = 0;    // let frame drops warm up        
         float frame_drop_perc = frames_dropped / MODEL_FREQ;
 
         model_publish(pm, extra.frame_id, frame_id,  vipc_dropped_frames, frame_drop_perc, model_buf, extra.timestamp_eof);
