@@ -209,9 +209,6 @@ if os.environ.get('SCONS_CACHE'):
       if not os.path.isdir(cache_dir_branch) and os.path.isdir(cache_dir):
         shutil.copytree(cache_dir, cache_dir_branch)
       cache_dir = cache_dir_branch
-  elif TICI:
-    cache_dir = '/data/scons_cache'
-
   CacheDir(cache_dir)
 
 node_interval = 5

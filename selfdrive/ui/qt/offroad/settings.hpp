@@ -21,6 +21,7 @@ public slots:
   void checkboxClicked(int state);
 };
 
+
 class SettingsWindow : public QWidget {
   Q_OBJECT
 

@@ -3,6 +3,8 @@
 #include <sstream>
 #include <cassert>
 
+#include "settings.hpp"
+
 #include <QString>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -10,8 +12,6 @@
 #include <QLabel>
 #include <QPixmap>
 
-#include "wifi.hpp"
-#include "settings.hpp"
 #include "common/params.h"
 
 ParamsToggle::ParamsToggle(QString param, QString title, QString description, QString icon_path, QWidget *parent): QFrame(parent) , param(param) {
@@ -189,17 +189,6 @@ QWidget * developer_panel() {
   return widget;
 }
 
-QWidget * network_panel() {
-  QVBoxLayout *main_layout = new QVBoxLayout;
-
-  main_layout->addWidget(new WifiUI());
-
-  QWidget *widget = new QWidget;
-  widget->setLayout(main_layout);
-  return widget;
-}
-
-
 void SettingsWindow::setActivePanel() {
   QPushButton *btn = qobject_cast<QPushButton*>(sender());
   panel_layout->setCurrentWidget(panels[btn->text()]);
@@ -228,7 +217,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QWidget(parent) {
     {"device", device_panel()},
     {"toggles", toggles_panel()},
     {"developer", developer_panel()},
-    {"network", network_panel()},    
   };
 
   for (auto &panel : panels) {

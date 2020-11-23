@@ -125,8 +125,7 @@ if not prebuilt:
             print("....%d" % i)
             time.sleep(1)
           subprocess.check_call(["scons", "-c"], cwd=BASEDIR, env=env)
-          shutil.rmtree("/tmp/scons_cache", ignore_errors=True)
-          shutil.rmtree("/data/scons_cache", ignore_errors=True)
+          shutil.rmtree("/tmp/scons_cache")
         else:
           print("scons build failed after retry")
           sys.exit(1)

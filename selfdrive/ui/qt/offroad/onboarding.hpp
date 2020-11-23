@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QWidget>
-#include <QStackedLayout>
+
 
 // TODO: this is defined in python too
 #define LATEST_TERMS_VERSION "2"
@@ -13,14 +13,12 @@ class OnboardingWindow : public QWidget {
 public:
   explicit OnboardingWindow(QWidget *parent = 0);
 
-private:
-  QWidget * terms_screen();
-  QWidget * training_screen();
-  QStackedLayout *layout;
-
 signals:
   void onboardingDone();
 
-public slots:
+private:
+  QWidget * terms_screen();
+
+private slots:
   void updateActiveScreen();
 };
