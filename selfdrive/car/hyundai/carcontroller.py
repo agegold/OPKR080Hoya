@@ -207,8 +207,8 @@ class CarController():
       if self.steerDeltaUp_timer > 50:
         self.steerDeltaUp += 1
         self.steerDeltaUp_timer = 0
-        if self.steerDeltaUp >= 5:
-          self.steerDeltaUp = 5
+        if self.steerDeltaUp >= 7:
+          self.steerDeltaUp = 7
       if self.steerDeltaDown_timer > 25:
         self.steerDeltaDown += 1
         self.steerDeltaDown_timer = 0
