@@ -132,9 +132,9 @@ class CarController():
     self.longcontrol = CP.openpilotLongitudinalControl
     self.scc_live = not CP.radarOffCan
 
-    self.angle_differ_range = [0, 40]
+    self.angle_differ_range = [0, 60]
     self.steerMax_range = [255, SteerLimitParams.STEER_MAX]
-    self.steerDeltaUp_range = [int(self.params.get('SteerDeltaUpAdj')), 5]
+    self.steerDeltaUp_range = [int(self.params.get('SteerDeltaUpAdj')), 7]
     self.steerDeltaDown_range = [int(self.params.get('SteerDeltaDownAdj')), 10]
 
     self.steerMax = 255

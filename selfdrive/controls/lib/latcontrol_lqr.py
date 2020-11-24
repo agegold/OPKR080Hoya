@@ -25,7 +25,7 @@ class LatControlLQR():
     self.sat_count_rate = 1.0 * DT_CTRL
     self.sat_limit = CP.steerLimitTimer
 
-    self.angle_differ_range = [0, 45]
+    self.angle_differ_range = [0, 60]
     self.scale_range = [1800, self.scale]
     self.new_scale = self.scale
     self.ki_range = [0.02, self.ki]
