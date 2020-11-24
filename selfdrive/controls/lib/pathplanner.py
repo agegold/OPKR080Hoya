@@ -97,7 +97,7 @@ class PathPlanner():
     self.steer_rate_cost_range = [CP.steerRateCost, 0.1]
 
     self.steer_actuator_delay_range_angle = [0.25, 0.15]
-    self.steer_actuator_delay_range = [0.1, CP.steerActuatorDelay]
+    self.steer_actuator_delay_range = [0.15, CP.steerActuatorDelay]
     self.steer_actuator_delay_vel = [3, 22]
     self.new_steer_actuator_delay = CP.steerActuatorDelay
 
